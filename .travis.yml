@@ -22,9 +22,9 @@ matrix:
         - SYMFONY_VERSION=2.7.*
         - dependencies=lowest
 
-      env:
+    - env:
         - SYMFONY_VERSION=2.7.*
-        - fixer=cs_dry_run
+        - cs_fixer=cs_dry_run
 
   exclude:
     - php: 5.6
@@ -52,14 +52,15 @@ before_script:
   - phpenv config-add travis.php.ini
   - travis_wait composer require symfony/symfony:${SYMFONY_VERSION} --prefer-source --no-update -v
   - travis_wait composer install --prefer-source
-  - if [ "$dependencies" = "cs_dry_run" ]; then composer update --prefer-lowest --prefer-stable -n; fi;
+  - if [ "$dependencies" = "lowest" ]; then composer update --prefer-lowest --prefer-stable -n; fi;
   - mv ~/xdebug.ini /home/travis/.phpenv/versions/$(phpenv version-name)/etc/conf.d/xdebug.ini
+  - if [ "$cs_fixer" = "cs_dry_run" ]; php vendor/friendsofphp/php-cs-fixer/php-cs-fixer --diff --dry-run -v fix --config=.php_cs.dist ./; fi;
+
 
 script:
   - travis_wait vendor/phpunit/phpunit/phpunit --coverage-clover=coverage.clover /home/travis/build/azine/email-bundle/Tests/
   - wget https://scrutinizer-ci.com/ocular.phar
   - php ocular.phar code-coverage:upload --format=php-clover coverage.clover
-  - if [ "$fixer" = "cs_dry_run" ]; php vendor/friendsofphp/php-cs-fixer/php-cs-fixer --diff --dry-run -v fix --config=.php_cs.dist ./; fi;
 
 notifications:
   email: travis@azine-it.ch
