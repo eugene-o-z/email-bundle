@@ -54,7 +54,7 @@ before_script:
   - travis_wait composer install --prefer-source
   - if [ "$dependencies" = "lowest" ]; then composer update --prefer-lowest --prefer-stable -n; fi;
   - mv ~/xdebug.ini /home/travis/.phpenv/versions/$(phpenv version-name)/etc/conf.d/xdebug.ini
-  - if [ "$cs_fixer" = "cs_dry_run" ]; php vendor/friendsofphp/php-cs-fixer/php-cs-fixer --diff --dry-run -v fix --config=.php_cs.dist ./; fi;
+  - if [ "$cs_fixer" = "cs_dry_run" ]; then php vendor/friendsofphp/php-cs-fixer/php-cs-fixer --diff --dry-run -v fix --config=.php_cs.dist ./; fi;
 
 
 script:
