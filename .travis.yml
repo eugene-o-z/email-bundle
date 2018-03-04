@@ -17,6 +17,7 @@ env:
   - SYMFONY_VERSION=dev-master
 
 matrix:
+  fast_finish: true
   include:
     - env:
         - SYMFONY_VERSION=2.7.*
@@ -56,7 +57,7 @@ before_script:
   - mv ~/xdebug.ini /home/travis/.phpenv/versions/$(phpenv version-name)/etc/conf.d/xdebug.ini
 
 script:
-  - travis_wait vendor/phpunit/phpunit/phpunit --coverage-clover=coverage.clover /home/travis/build/azine/email-bundle/Tests/
+  - travis_wait vendor/phpunit/phpunit/phpunit --coverage-clover=coverage.clover /home/travis/build/eugene-o-z/email-bundle/Tests/
   - wget https://scrutinizer-ci.com/ocular.phar
   - php ocular.phar code-coverage:upload --format=php-clover coverage.clover
   - if [ "$cs_fixer" = "cs_dry_run" ]; then php vendor/friendsofphp/php-cs-fixer/php-cs-fixer --diff --dry-run -v fix --config=.php_cs.dist ./; fi;
