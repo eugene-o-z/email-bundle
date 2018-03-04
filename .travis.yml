@@ -23,7 +23,7 @@ matrix:
         - dependencies=lowest
 
     - env:
-        - SYMFONY_VERSION=2.7.*
+        - SYMFONY_VERSION=2.8.*
         - cs_fixer=cs_dry_run
 
   exclude:
@@ -54,13 +54,12 @@ before_script:
   - travis_wait composer install --prefer-source
   - if [ "$dependencies" = "lowest" ]; then composer update --prefer-lowest --prefer-stable -n; fi;
   - mv ~/xdebug.ini /home/travis/.phpenv/versions/$(phpenv version-name)/etc/conf.d/xdebug.ini
-  - if [ "$cs_fixer" = "cs_dry_run" ]; then php vendor/friendsofphp/php-cs-fixer/php-cs-fixer --diff --dry-run -v fix --config=.php_cs.dist ./; fi;
-
 
 script:
   - travis_wait vendor/phpunit/phpunit/phpunit --coverage-clover=coverage.clover /home/travis/build/azine/email-bundle/Tests/
   - wget https://scrutinizer-ci.com/ocular.phar
   - php ocular.phar code-coverage:upload --format=php-clover coverage.clover
+  - if [ "$cs_fixer" = "cs_dry_run" ]; then php vendor/friendsofphp/php-cs-fixer/php-cs-fixer --diff --dry-run -v fix --config=.php_cs.dist ./; fi;
 
 notifications:
   email: travis@azine-it.ch
